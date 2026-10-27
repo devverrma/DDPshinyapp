@@ -1,0 +1,56 @@
+Car Fuel Efficiency Predictor
+========================================================
+author: Dev Verma
+date: October 27, 2026
+autosize: true
+
+A Shiny app that predicts a car's mileage and monthly fuel cost
+
+The Problem
+========================================================
+
+- Buyers compare cars on price, but fuel cost adds up every month
+- Mileage depends mainly on **weight**, **horsepower** and **transmission**
+- People need a quick way to see how those specs change fuel efficiency and cost
+
+**Our app:** move a few sliders, get predicted MPG, km/l and monthly fuel cost instantly.
+
+The Model
+========================================================
+
+A linear regression on the built-in `mtcars` dataset:
+
+```{r}
+model <- lm(mpg ~ wt + hp + am, data = mtcars)
+round(coef(model), 3)
+round(summary(model)$r.squared, 3)
+```
+
+Each extra 1000 lbs of weight costs about 2.9 MPG, and the model explains about 84% of the variation in MPG.
+
+Example Prediction
+========================================================
+
+A 3000 lb, 150 hp manual car:
+
+```{r}
+model <- lm(mpg ~ wt + hp + am, data = mtcars)
+mpg <- predict(model, data.frame(wt = 3, hp = 150, am = 1))
+kmpl <- mpg * 0.425144
+c(MPG = round(mpg, 1), KmPerLitre = round(kmpl, 1),
+  MonthlyCost = round(1000 / kmpl * 105))
+```
+
+The app does this calculation live as you move the sliders (1000 km/month at 105 per litre).
+
+Try It
+========================================================
+
+- **App:** https://YOUR-USERNAME.shinyapps.io/MPGPredictor/
+- **Code:** https://github.com/YOUR-USERNAME/MPGPredictor
+
+Inputs: weight and horsepower sliders, transmission radio buttons, a fit-line checkbox, distance and fuel price.
+
+Outputs: predicted MPG, km/l, monthly fuel cost, and a plot comparing your car with 32 others.
+
+Full usage instructions are on the app's **Documentation** tab.
